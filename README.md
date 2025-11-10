@@ -41,7 +41,7 @@ If the extension includes functionality that reads/writes files or packages data
 ## Files of interest
 
 - `manifest.json`: check `name`, `version`, `permissions`, `action`/`popup` entries, and background/service_worker fields (if present). If you plan to publish the extension, update `manifest.json` fields such as description, icons, and permissions to match best practices.
--
+
 ## Manifest details
 
 The extension manifest was inspected and the key values are listed below (directly taken from `manifest.json` in this folder):
@@ -76,21 +76,4 @@ Notes:
 - The extension is intended for local development and testing (unpacked). If you want to publish to the Chrome Web Store, additional steps and reviews are required.
 - No external build system present. If you add one (Webpack, Rollup, etc.), include build instructions and a `package.json`.
 
-## Next steps and recommended improvements
-
-- Verify and document exact `manifest.json` values (name, version, permissions). Update README accordingly. (TODO in the project todo list.)
-- Add a minimal `package.json` if you plan to add tooling (linting, bundling, tests).
-- Add automated checks: linting (ESLint) and a small test harness for code that can be unit-tested.
-- If you want CI/CD, add a GitHub Actions workflow to run linters/tests and (optionally) package a release artifact.
-
-## Contributing
-
-If you or others will continue development locally, provide a short CONTRIBUTING guide here or in a separate `CONTRIBUTING.md`. Keep changes small and document them in pull requests.
-
 ## License
-
-Add a license file (e.g. `LICENSE`) and specify the license here. If this is a private project or internal tool, note that in this README.
-
----
-
-If you want, I can next inspect `manifest.json` and update this README with the exact extension `name`, `version`, `permissions`, and any declared background/service worker fields. Would you like me to do that now?
