@@ -1,0 +1,624 @@
+@font-face {
+    font-family: "Cadiz";
+    font-style: normal;
+    font-weight: 400;
+    /* Make sure you add the font file to this path! */
+    src: url("fonts/cadiz-regular.woff2") format("woff2");
+}
+
+/* ================================== */
+/* --- TABLE OF CONTENTS --- */
+/* ================================== */
+/*
+1.  GLOBAL STYLES & BODY
+2.  HEADER & NAVIGATION BAR
+3.  VIEW TRANSITIONS
+4.  SCROLLBAR (Shared)
+5.  MAIN VIEW: EXTENSION LIST
+6.  MAIN VIEW: EXTENSION CARDS
+7.  MAIN VIEW: TOGGLE SWITCH
+8.  MAIN VIEW: PERMISSION DROPDOWN
+9.  MAIN VIEW: SECTION HEADERS
+10. MAIN VIEW: RISK & SOURCE BADGES
+11. MAIN VIEW: MAIN ACTIONS (Refresh)
+12. STORE VIEW: RECOMMENDED LIST
+13. CONTEXT MENU (Right-Click)
+14. PLACEHOLDER ICON
+15. TOOLTIP (Shared)
+*/
+
+/* ================================== */
+/* 1. GLOBAL STYLES & BODY */
+/* ================================== */
+
+/* Prevent user from selecting content */
+:root {
+    user-select: none;
+}
+
+/* Base body styling, dark theme, and fixed dimensions */
+body {
+    position: relative; /* For absolute positioning of children */
+    width: 275px;
+    max-height: 600px;
+    padding: 10px;
+    /*font-family: "Inter", sans-serif;*/
+    font-family: "Cadiz", "Inter";
+    font-size: 13px;
+    color: #e0e0e0;
+    background-color: #0a0a0a;
+    overflow: hidden; /* Prevents resizing/scrollbars on body */
+}
+
+/* Horizontal line separator */
+hr {
+    height: 2px;
+    margin: 0; /* Reset default margin */
+    background-color: #1a1a1a;
+    border: none;
+}
+
+/* Style for status and count lines */
+#subline {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+/* ================================== */
+/* 2. HEADER & NAVIGATION BAR */
+/* ================================== */
+
+/* Container for the title and nav buttons */
+#title-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 4px;
+}
+
+/* Extension name/Title element */
+#extName {
+    flex-grow: 1;
+    font-weight: 900;
+    text-align: center;
+}
+
+/* Base style for header buttons and store 'View' button */
+#storeBtn,
+#backBtn,
+.store-view-btn {
+    z-index: 999; /* Ensure nav buttons are on top */
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    padding: 4px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    color: #e0e0e0;
+    background: none;
+    transition: background 0.2s ease;
+    cursor: pointer;
+}
+
+#storeBtn:hover,
+#backBtn:hover,
+.store-view-btn:hover {
+    background: #222;
+}
+
+/* ================================== */
+/* 3. VIEW TRANSITIONS */
+/* ================================== */
+
+/* Base style for main content views */
+#main-view,
+#store-view {
+    position: absolute;
+    top: 0; /* Positioned relative to body padding */
+    left: 0;
+    width: 100%;
+    visibility: hidden;
+    opacity: 0;
+    transition:
+        opacity 0.25s ease-in-out,
+        visibility 0.25s ease-in-out;
+}
+
+/* Active view fades in */
+#main-view.active,
+#store-view.active {
+    position: relative; /* Occupy space in document flow */
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Utility classes */
+.invisible {
+    visibility: hidden;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* ================================== */
+/* 4. SCROLLBAR (Shared) */
+/* ================================== */
+
+/* Shared scrollbar for extension list and store list */
+#extList::-webkit-scrollbar,
+#store-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+#extList::-webkit-scrollbar-track,
+#store-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+#extList::-webkit-scrollbar-thumb,
+#store-list::-webkit-scrollbar-thumb {
+    background-color: #333;
+    border-radius: 6px;
+}
+
+#extList::-webkit-scrollbar-thumb:hover,
+#store-list::-webkit-scrollbar-thumb:hover {
+    background-color: #444;
+}
+
+/* ================================== */
+/* 5. MAIN VIEW: EXTENSION LIST */
+/* ================================== */
+
+/* Container for the list of installed extensions */
+#extList {
+    max-height: 250px; /* Fits ~4 extensions */
+    padding-right: 4px; /* Prevent scrollbar overlap */
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* ================================== */
+/* 6. MAIN VIEW: EXTENSION CARDS */
+/* ================================== */
+
+/* Main container/card for an extension */
+.ext-container {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 8px;
+    padding: 6px 8px;
+    border-radius: 10px;
+    background: #141111;
+    transition: background 0.2s ease;
+}
+
+.ext-container:hover {
+    background: #1a1a1a;
+}
+
+/* Top row: icon, name, and toggle */
+.ext-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+}
+
+/* Container for icon and text details */
+.ext-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Icon styling */
+.ext-icon {
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+}
+
+/* Container for name, version, and badges */
+.ext-details {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    line-height: 1.2;
+}
+
+/* Line containing the name and badges */
+.ext-name-line {
+    display: flex;
+    gap: 7px;
+}
+
+/* Truncation for the extension name */
+.ext-name {
+    display: block;
+    max-width: 150px; /* Adjust as needed */
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+/* Extension version text */
+.ext-version {
+    font-size: 11px;
+    color: #888;
+}
+
+/* Container for source and risk badges */
+.badges {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* ================================== */
+/* 7. MAIN VIEW: TOGGLE SWITCH */
+/* ================================== */
+
+/* Base circular checkbox style */
+.toggle {
+    position: relative;
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    border: 2px solid #555;
+    border-radius: 50%;
+    background-color: #111;
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+}
+
+/* Checked (Enabled) state */
+.toggle:checked {
+    border-color: #007aff;
+    background-color: #007aff;
+}
+
+/* Checkmark inside the toggle */
+.toggle::after {
+    content: "";
+    position: absolute;
+    top: 2px;
+    left: 4px;
+    width: 3px;
+    height: 7px;
+    border-right: 2px solid #fff;
+    border-bottom: 2px solid #fff;
+    opacity: 0;
+    transform: rotate(45deg);
+    transition: opacity 0.15s ease-in-out;
+}
+
+.toggle:checked::after {
+    opacity: 1;
+}
+
+.toggle:hover {
+    border-color: #999;
+}
+
+/* Focus indicator for accessibility */
+.toggle:focus-visible {
+    box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.4);
+}
+
+/* ================================== */
+/* 8. MAIN VIEW: PERMISSION DROPDOWN  */
+/* ================================== */
+
+/* Container for the list of permissions (hidden by default) */
+.permissions {
+    display: none; /* Toggled by JS */
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 6px;
+    padding: 6px;
+    border-radius: 6px;
+    background: #0b0b0b;
+}
+
+/* Individual permission tag */
+.permission-item {
+    padding: 4px 6px;
+    border: 1px solid #333; /* Default border */
+    border-radius: 4px;
+    font-size: 11px;
+    background: #181818;
+    color: #ccc;
+    transition: background 0.2s ease;
+    word-break: break-all;
+}
+.permission-item:hover {
+    background: #222;
+}
+
+/* New color-coded risk levels for permissions */
+.permission-item.risk-medium {
+    border-color: #b08d00;
+    background-color: rgba(255, 204, 102, 0.05);
+}
+.permission-item.risk-high {
+    border-color: #c0392b;
+    background-color: rgba(255, 111, 97, 0.05);
+}
+.permission-item.risk-critical {
+    border-color: #ff4136;
+    background-color: rgba(255, 65, 54, 0.1);
+    color: #ff6f61;
+    font-weight: 500;
+}
+
+/* ================================== */
+/* 9. MAIN VIEW: SECTION HEADERS */
+/* ================================== */
+
+.section-header {
+    margin: 8px 0 4px 4px;
+    font-size: 12px;
+    color: #888;
+}
+
+/* ================================== */
+/* 10. MAIN VIEW: RISK & SOURCE BADGES */
+/* ================================== */
+
+/* Container style for the calculated risk score */
+.risk-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    width: fit-content;
+    padding: 2px 6px; /* Made slightly smaller */
+    border: 1px solid transparent;
+    border-radius: 6px;
+    font-size: 10px; /* Made slightly smaller */
+    font-weight: 600;
+    text-transform: uppercase; /* New style */
+    background-color: rgba(20, 20, 20, 0.9);
+    transition: all 0.25s ease;
+}
+
+/* New 5-level risk colors */
+.safe {
+    color: #7fff91;
+    border-color: rgba(0, 255, 100, 0.25);
+    background-color: rgba(0, 255, 100, 0.05);
+}
+.low-risk {
+    color: #c9ff8d;
+    border-color: rgba(200, 255, 150, 0.25);
+    background-color: rgba(180, 255, 150, 0.05);
+}
+.medium-risk {
+    color: #ffcc66;
+    border-color: rgba(255, 204, 102, 0.25);
+    background-color: rgba(255, 204, 102, 0.05);
+}
+.high-risk {
+    color: #ff6f61;
+    border-color: rgba(255, 111, 97, 0.25);
+    background-color: rgba(255, 111, 97, 0.05);
+}
+.very-high {
+    color: #ff4136;
+    border-color: rgba(255, 65, 54, 0.3);
+    background-color: rgba(255, 65, 54, 0.05);
+}
+
+/* Verification Badge (beside the name) */
+.verify-badge {
+    flex-shrink: 0;
+    font-size: 13px;
+}
+.verified {
+    color: #7fff91;
+}
+.unverified {
+    color: #ff5c5c;
+}
+
+/* Install source (Policy, Dev, etc.) */
+.source-badge {
+    flex-shrink: 0;
+    padding: 2px 6px;
+    border: 1px solid #333;
+    border-radius: 6px;
+    font-size: 10px;
+    color: #ffb347;
+    background-color: #1a1a1a;
+    user-select: none;
+    cursor: default;
+}
+
+/* ================================== */
+/* 11. MAIN VIEW: MAIN ACTIONS (Refresh) */
+/* ================================== */
+
+/* Styling for the refresh button */
+#refreshBtn {
+    width: 100%;
+    margin-top: 8px;
+    padding: 6px;
+    border: 1px solid #333;
+    border-radius: 8px;
+    color: #eee;
+    background: #181818;
+    transition: background 0.2s ease;
+    cursor: pointer;
+}
+
+#refreshBtn:hover {
+    background: #222;
+}
+
+/* ================================== */
+/* 12. STORE VIEW: RECOMMENDED LIST */
+/* ================================== */
+
+/* Scrollable container for the store */
+#store-list {
+    max-height: 310px; /* Sized to fit remaining popup height */
+    padding-right: 4px; /* For scrollbar */
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* Individual item in the store list */
+.store-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+    padding: 10px;
+    border-radius: 10px;
+    background: #141111;
+    transition: background 0.2s ease;
+}
+
+.store-item:hover {
+    background: #1a1a1a;
+}
+
+/* Container for name and description */
+.store-details {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    min-width: 0; /* Critical for text truncation */
+}
+
+.store-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: #eee;
+}
+
+/* Truncation for the description */
+.store-desc {
+    font-size: 11px;
+    color: #888;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+/* Specific styling for the 'View' button */
+.store-view-btn {
+    /* Overrides base button style */
+    width: auto;
+    height: auto;
+    padding: 5px 10px;
+    border: 2px solid #1a1a1a;
+    border-radius: 6px;
+    font-size: 12px;
+}
+
+.store-view-btn:hover {
+    border-color: #555;
+    background: #222;
+}
+
+/* ================================== */
+/* 13. CONTEXT MENU (Right-Click) */
+/* ================================== */
+
+/* Main container for the right-click menu */
+#context-menu {
+    position: absolute;
+    z-index: 10000;
+    min-width: 150px;
+    padding: 5px;
+    border: 1px solid #333;
+    border-radius: 8px;
+    background-color: #1a1a1a;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+/* Buttons within the context menu */
+.context-menu-btn {
+    display: block;
+    width: 100%;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #ff5c5c; /* Red for delete */
+    background: none;
+    text-align: left;
+    cursor: pointer;
+}
+
+.context-menu-btn:hover {
+    background-color: #333;
+}
+
+/* ================================== */
+/* 14. PLACEHOLDER ICON */
+/* ================================== */
+
+/* Placeholder for extensions without icons */
+.placeholder-icon {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    font-size: 10px;
+    font-weight: 600;
+    color: #0a0a0a; /* Text inside circle */
+    background-color: #555; /* Fallback color */
+    text-transform: uppercase;
+}
+
+/* ================================== */
+/* 15. TOOLTIP (Shared) */
+/* ================================== */
+
+/*
+  Merged definition for all tooltips.
+  JS will set 'position' to 'absolute' or 'fixed' as needed.
+*/
+.permission-tooltip {
+    position: absolute; /* Base, overridden by JS if needed */
+    z-index: 99999;
+    max-width: 260px;
+    padding: 6px 8px;
+    border: 1px solid #333;
+    border-radius: 6px;
+    font-size: 12px;
+    line-height: 1.4; /* Slightly more spacing for readability */
+    color: #eee;
+    background: #111;
+    white-space: normal;
+    opacity: 0;
+    pointer-events: none;
+    transition:
+        opacity 0.15s ease,
+        transform 0.1s ease;
+}
+
+/* New style to support HTML in score breakdown tooltips */
+.permission-tooltip b {
+    color: #ffcc66; /* Gold color for emphasis */
+    font-weight: 600;
+}

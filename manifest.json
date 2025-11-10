@@ -1,0 +1,24 @@
+{
+  "manifest_version": 3,
+  "name": "xtnMonitor",
+  "version": "3.0",
+  "description": "Monitors installed extensions for permissions and risks.",
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/logo16.png",
+      "48": "icons/logo48.png",
+      "128": "icons/logo128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/logo16.png",
+    "48": "icons/logo48.png",
+    "128": "icons/logo128.png"
+  },
+  "permissions": ["management", "storage"],
+  "host_permissions": [
+    "https://chrome-stats.com/",
+    "https://lh3.googleusercontent.com/"
+  ]
+}

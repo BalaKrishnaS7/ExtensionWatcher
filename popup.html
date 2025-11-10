@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>xtnMonitor</title>
+        <link rel="stylesheet" href="popup.css" />
+    </head>
+    <body>
+        <div id="header">
+            <div id="title-bar">
+                <button id="backBtn" class="invisible" title="Back to list">
+                    ←
+                </button>
+                <div id="extName">xtnMonitor</div>
+                <button id="storeBtn" title="Recommended Extensions">🛒</button>
+            </div>
+            <hr />
+        </div>
+
+        <div id="main-view" class="active">
+            <div id="stats">
+                <div id="subline">Loading...</div>
+            </div>
+            <div id="extList"></div>
+            <button id="refreshBtn">Refresh</button>
+        </div>
+
+        <div id="store-view">
+            <div id="store-list"></div>
+        </div>
+
+        <script src="lib/jszip.min.js"></script>
+        <script src="popup.js"></script>
+    </body>
+</html>
